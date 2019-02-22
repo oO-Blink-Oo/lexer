@@ -31,7 +31,7 @@ bool isSeparator(char c); //done
 bool isOperator(char c); //done
 bool isRealNum(std::string c);
 
-void printKeywords();
+void printKeywords(std::vector<char> &vec);
 void printIdentifiers();
 void printSeparators(std::vector<char> &vec);
 void printOperators(std::vector<char> &vec);
@@ -65,7 +65,8 @@ int main() {
 	}//after this while-loop the string vector will be populated
 
 
-	std::string tempBuf;
+	std::string tempBuf; // used to populate a string
+	std::vector<std::string> tempStringBuf; // used to populate strings that were tempBuf
 	int state = 0;
 
 
@@ -91,21 +92,35 @@ int main() {
 		push characters into temp string
 		check the temp string if keyword or identifier
 		push the string into keyword buffer or identifier buffer
+		clear tempBuf
 		*/
 
 		if (isalpha(myTxt[i])) { 
 
 			tempBuf.push_back(myTxt[i]);
 
-		} else if (isdigit(myTxt[i])) {
+		} else {
+			//check what the buffer has
+			//check if keyword or identifier here....
+			tempStringBuf.push_back(tempBuf);
 			
+			std::cout << "Print here    " << tempStringBuf[tempStringBuf.size() - 1] << std::endl;
+			tempBuf.clear();
 		} 
+		
+		if (isSeparator(myTxt[i])) {
+			sepBuf.push_back(myTxt[i]);
+		}
+		if (isOperator(myTxt[i])) {
+			operBuf.push_back(myTxt[i]);
+		}
+	
 		
 
 	}
 
-
-
+	std::cout << tempStringBuf[0] << std::endl;
+	
 
 
 
@@ -113,12 +128,13 @@ int main() {
 	std::cout << std::setw(15) << std::left << "  Token" << std::setw(18) << std::right << "Lexeme" << std::endl;
 	printSeparators(sepBuf); //print all of the separators in its buffer
 	printOperators(operBuf);
+	//printKeywords(keyBuf);
 	
 	// PRINTS EACH STRING/CHARACTER
-	for (size_t i = 0; i < myTxt.size(); i++)
+	/*for (size_t i = 0; i < myTxt.size(); i++)
 	{
 		std::cout << myTxt[i] << std::endl;
-	}
+	}*/
 
 	
 
@@ -160,6 +176,14 @@ bool isRealNum(std::string c)
 		return true;
 	}
 	return false;
+}
+
+void printKeywords(std::vector<char> &vec) {
+
+	for (size_t i = 0; i < vec.size(); i++) {
+		std::cout << std::setw(15) << std::left << "KEYWORD" << std::setw(15) << std::left << "  =" << std::setw(15) << std::left << vec[i] << std::endl;
+	}
+
 }
 
 void printSeparators(std::vector<char> &vec)
