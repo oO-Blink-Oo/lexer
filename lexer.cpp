@@ -65,26 +65,10 @@ int main() {
 	}//after this while-loop the string vector will be populated
 
 
+
 	std::string tempBuf; // used to populate a string
 	std::vector<std::string> tempStringBuf; // used to populate strings that were tempBuf
 	int state = 0;
-
-
-	//GOES THROUGH THE VECTOR THAT HAS CHARACTERS
-	//for (size_t i = 0; i < myTxt.size(); i++) {
-	//	/*
-	//	make a temp string to hold characters
-	//	push characters into temp string
-	//	check the temp string if keyword or identifier
-	//	push the string into keyword buffer or identifier buffer
-	//	*/
-	//	if (isSeparator(myTxt[i])){
-	//		sepBuf.push_back(myTxt[i]);
-	//	}
-	//	if (isOperator(myTxt[i])) {
-	//		operBuf.push_back(myTxt[i]);
-	//	}
-	//}
 	
 	for (size_t i = 0; i < myTxt.size(); i++) {
 		/*
@@ -200,3 +184,20 @@ void printOperators(std::vector<char> &vec)
 		std::cout << std::setw(15) << std::left << "OPERATOR" << std::setw(15) << std::left << "  =" << std::setw(15) << std::left << vec[i] << std::endl;
 	}
 }
+
+
+//GOES THROUGH THE VECTOR THAT HAS CHARACTERS
+	//for (size_t i = 0; i < myTxt.size(); i++) {
+	//	/*
+	//	make a temp string to hold characters
+	//	push characters into temp string
+	//	check the temp string if keyword or identifier
+	//	push the string into keyword buffer or identifier buffer
+	//	*/
+	//	if (isSeparator(myTxt[i])){
+	//		sepBuf.push_back(myTxt[i]);
+	//	}
+	//	if (isOperator(myTxt[i])) {
+	//		operBuf.push_back(myTxt[i]);
+	//	}
+	//}
