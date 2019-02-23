@@ -66,44 +66,31 @@ int main() {
 
 
 
-	std::string tempBuf; // used to populate a string
+	std::string stringBuff; // used to populate a string
 	std::vector<std::string> tempStringBuf; // used to populate strings that were tempBuf
 	int state = 0;
 	
 	for (size_t i = 0; i < myTxt.size(); i++) {
-		/*
-		make a temp string to hold characters
-		push characters into temp string
-		check the temp string if keyword or identifier
-		push the string into keyword buffer or identifier buffer
-		clear tempBuf
-		*/
-
-		if (isalpha(myTxt[i])) { 
-
-			tempBuf.push_back(myTxt[i]);
-
-		} else {
-			//check what the buffer has
-			//check if keyword or identifier here....
-			tempStringBuf.push_back(tempBuf);
-			
-			std::cout << "Print here    " << tempStringBuf[tempStringBuf.size() - 1] << std::endl;
-			tempBuf.clear();
-		} 
 		
-		if (isSeparator(myTxt[i])) {
+		if (isalpha(myTxt[i]) || myTxt[i] == '$') {
+			stringBuff.push_back(myTxt[i]);
+			
+		}
+
+		
+		/*if (isSeparator(myTxt[i])) {
 			sepBuf.push_back(myTxt[i]);
 		}
 		if (isOperator(myTxt[i])) {
 			operBuf.push_back(myTxt[i]);
-		}
+		}*/
+
 	
 		
 
 	}
-
-	std::cout << tempStringBuf[0] << std::endl;
+	std::cout << "TRIAL: " << stringBuff << std::endl;
+	
 	
 
 
