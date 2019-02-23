@@ -44,7 +44,7 @@ int main() {
 	inFile.open("sample.txt"); // opens txt file
 
 	std::vector<std::string> keyBuf;
-	std::vector<char> identBuf;
+	std::vector<std::string> identBuf;
 	std::vector<char> sepBuf;
 	std::vector<char> operBuf;
 
@@ -67,29 +67,38 @@ int main() {
 
 
 	std::string stringBuff; // used to populate a string
-	std::vector<std::string> tempStringBuf; // used to populate strings that were tempBuf
+	std::vector<std::string> words; // used to populate words that needs to be classified as identifier or keyword
 	int state = 0;
+	/*
+	0 = letter
+	1 = digit
+	*/
 	
 	for (size_t i = 0; i < myTxt.size(); i++) {
 		
-		if (isalpha(myTxt[i]) || myTxt[i] == '$') {
-			stringBuff.push_back(myTxt[i]);
-			
-		}
 
+		if (isalpha(myTxt[i]) || myTxt[i] == '$') {
+
+			stringBuff.push_back(myTxt[i]);
+
+		} else if (myTxt[i] == ' ' || myTxt[i] == '\n') {
+			words.push_back(stringBuff);
+			stringBuff.clear();
+			std::cout << "PRINT SOMETHING: " << words[0] << std::endl;
+		}
 		
-		/*if (isSeparator(myTxt[i])) {
+
+		/*
+		if (isSeparator(myTxt[i])) {
 			sepBuf.push_back(myTxt[i]);
 		}
 		if (isOperator(myTxt[i])) {
 			operBuf.push_back(myTxt[i]);
 		}*/
 
-	
-		
-
 	}
-	std::cout << "TRIAL: " << stringBuff << std::endl;
+	
+	std::cout << "TRIAL: " << stringBuff[2] << std::endl;
 	
 	
 
