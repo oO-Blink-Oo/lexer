@@ -68,7 +68,8 @@ int main() {
 	std::string stringBuff; // used to populate a string
 	std::vector<std::string> words; // used to populate words that needs to be classified as identifier or keyword
 	
-	for (size_t i = 0; i < myTxt.size(); i++) {
+	//do space check here...
+	for (size_t i = 0; i < myTxt.size();) {
 		
 		// checks for letters and load to words buffer
 		if (isalpha(myTxt[i]) || myTxt[i] == '$') {
@@ -79,10 +80,10 @@ int main() {
 		{
 			stringBuff.push_back(myTxt[i]);
 		}
-		if (myTxt[i] == ' ' || myTxt[i] == '\n' || isSeparator(myTxt[i])) {
+		if (myTxt[i] == ' ' || myTxt[i] == '\n' || isSeparator(myTxt[i])) { //skip if we see a whitespace or a newline
 			words.push_back(stringBuff);
 			stringBuff.clear();
-			
+			++i;
 		}
 		
 		// checks for separator and operator
@@ -92,16 +93,15 @@ int main() {
 		if (isOperator(myTxt[i])) {
 			operBuf.push_back(myTxt[i]);
 		}
-
 	}
 
 	// remove whitespaces and newlines in words vector
-	for (size_t i = 0; i < words.size(); i++) {
-		std::cout << "Index #" << i << " " << words[i] << std::endl;
-	}
-
-	// Checks is the words in words buffer is a keyword or an identifier then push it to keyBuf or identBuf
 	/*for (size_t i = 0; i < words.size(); i++) {
+		std::cout << "Index #" << i << " " << words[i] << std::endl;
+	}*/
+
+	// Checks if the words in words buffer is a keyword or an identifier then push it to keyBuf or identBuf
+	for (size_t i = 0; i < words.size(); i++) {
 
 		if (words[i] == " " || words[i] == "\n")
 		{
@@ -118,7 +118,7 @@ int main() {
 
 		}
 
-	}*/
+	}
 	/*
 	for (size_t i = 0; i < words.size(); i++)
 	{
@@ -138,7 +138,7 @@ int main() {
 	//printSeparators(sepBuf); //print all of the separators in its buffer
 	//printOperators(operBuf);
 	//printKeywords(keyBuf);
-	//printIdentifiers(identBuf);
+	printIdentifiers(identBuf);
 	
 	// PRINTS EACH STRING/CHARACTER
 	/*for (size_t i = 0; i < myTxt.size(); i++)
@@ -190,7 +190,7 @@ bool isRealNum(std::string c)
 
 void printKeywords(std::vector<std::string> &vec) {
 
-	for (size_t i = 0; i < vec.size(); i++) {
+	for (size_t i = 0; i < vec.size(); i++) { 
 		if (vec[i] == " " || vec[i] == "\n") {
 			++i;
 		}
@@ -198,12 +198,10 @@ void printKeywords(std::vector<std::string> &vec) {
 	}
 
 }
-void printIdentifiers(std::vector<std::string> &vec) {
+void printIdentifiers(std::vector<std::string> &vec) { // remove space check
 
 	for (size_t i = 0; i < vec.size(); i++) {
-		if (vec[i] == " " || vec[i] == "\n") {
-			++i;
-		}
+		
 		std::cout << std::setw(15) << std::left << "IDENTIFIER" << std::setw(15) << std::left << "  =" << std::setw(15) << std::left << vec[i] << std::endl;
 	}
 
