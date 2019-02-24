@@ -69,7 +69,7 @@ int main() {
 	std::vector<std::string> words; // used to populate words that needs to be classified as identifier or keyword
 	
 	//do space check here...
-	for (size_t i = 0; i < myTxt.size();) {
+	for (size_t i = 0; i < myTxt.size();++i) {
 		
 		// checks for letters and load to words buffer
 		if (isalpha(myTxt[i]) || myTxt[i] == '$') {
@@ -79,13 +79,17 @@ int main() {
 		} else if (isalpha(myTxt[i-1]) && isdigit(myTxt[i])) // if the previous character is a letter and the current one is a digit push it to stringBuff still
 		{
 			stringBuff.push_back(myTxt[i]);
-		}
-		if (myTxt[i] == ' ' || myTxt[i] == '\n' || isSeparator(myTxt[i])) { //skip if we see a whitespace or a newline
-			words.push_back(stringBuff);
-			stringBuff.clear();
-			++i;
+		} else if (isalpha(myTxt[i - 1]) && isSeparator(myTxt[i])) {
+			sepBuf.push_back(myTxt[i]);
+
 		}
 		
+		// Problem when we see a separator it clears the stringBuff and pushes a BLANK string into words
+		if (myTxt[i] == ' ' || myTxt[i] == '\n'  || isSeparator(myTxt[i])) { //skip if we see a whitespace or a newline
+			words.push_back(stringBuff);
+			stringBuff.clear();
+		}
+
 		// checks for separator and operator
 		if (isSeparator(myTxt[i])) {
 			sepBuf.push_back(myTxt[i]);
@@ -96,29 +100,39 @@ int main() {
 	}
 
 	// remove whitespaces and newlines in words vector
-	/*for (size_t i = 0; i < words.size(); i++) {
-		std::cout << "Index #" << i << " " << words[i] << std::endl;
-	}*/
-
+	auto it = words.begin();
+	while (it != words.end())
+	{
+		// remove odd numbers
+		if (*it == "") {
+			// erase() invalidates the iterator, use returned iterator
+			it = words.erase(it);
+		}
+		// Notice that iterator is incremented only on the else part (why?)
+		else {
+			++it;
+		}
+	}
 	// Checks if the words in words buffer is a keyword or an identifier then push it to keyBuf or identBuf
+
 	for (size_t i = 0; i < words.size(); i++) {
-
-		if (words[i] == " " || words[i] == "\n")
-		{
-
-			words.erase(words.begin() + i);
-
-		} else if (isKeyword(words[i])) {
+		if (isKeyword(words[i])) {
 
 			keyBuf.push_back(words[i]);
 
-		} else {
+		}
+		else {
 
 			identBuf.push_back(words[i]);
-
 		}
-
 	}
+	
+	//Print words vector
+	/*for (size_t i = 0; i < words.size(); i++)
+	{
+		std::cout << "INDEX #" << i << " " << words[i] << std::endl;
+	}*/
+
 	/*
 	for (size_t i = 0; i < words.size(); i++)
 	{
@@ -135,9 +149,9 @@ int main() {
 
 	///////////// labeling category & printing 
 	std::cout << std::setw(15) << std::left << "  Token" << std::setw(18) << std::right << "Lexeme" << std::endl;
-	//printSeparators(sepBuf); //print all of the separators in its buffer
-	//printOperators(operBuf);
-	//printKeywords(keyBuf);
+	printSeparators(sepBuf); //print all of the separators in its buffer
+	printOperators(operBuf);
+	printKeywords(keyBuf);
 	printIdentifiers(identBuf);
 	
 	// PRINTS EACH STRING/CHARACTER
