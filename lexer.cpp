@@ -31,8 +31,8 @@ bool isSeparator(char c); //done
 bool isOperator(char c); //done
 bool isRealNum(std::string c);
 
-void printKeywords(std::vector<char> &vec);
-void printIdentifiers();
+void printKeywords(std::vector<std::string> &vec);
+void printIdentifiers(std::vector<std::string> &vec);
 void printSeparators(std::vector<char> &vec);
 void printOperators(std::vector<char> &vec);
 void printReal();
@@ -59,56 +59,86 @@ int main() {
 	//READS IN CHARACTER BY CHARACTER
 	while (!inFile.eof()) { // while there is something to read keep looping
 
-		inFile >> readChar; //gets a character and stores it at readChar
-		myTxt.push_back(readChar); // populates the vector with tokens
+		inFile >> std::noskipws >> readChar; //gets a character and stores it at readChar
+		myTxt.push_back(readChar); // populates the vector with characters
 
 	}//after this while-loop the string vector will be populated
 
 
-
 	std::string stringBuff; // used to populate a string
 	std::vector<std::string> words; // used to populate words that needs to be classified as identifier or keyword
-	int state = 0;
-	/*
-	0 = letter
-	1 = digit
-	*/
 	
 	for (size_t i = 0; i < myTxt.size(); i++) {
 		
-
+		// checks for letters and load to words buffer
 		if (isalpha(myTxt[i]) || myTxt[i] == '$') {
 
 			stringBuff.push_back(myTxt[i]);
 
-		} else if (myTxt[i] == ' ' || myTxt[i] == '\n') {
+		} else if (isalpha(myTxt[i-1]) && isdigit(myTxt[i])) // if the previous character is a letter and the current one is a digit push it to stringBuff still
+		{
+			stringBuff.push_back(myTxt[i]);
+		}
+		if (myTxt[i] == ' ' || myTxt[i] == '\n' || isSeparator(myTxt[i])) {
 			words.push_back(stringBuff);
 			stringBuff.clear();
-			std::cout << "PRINT SOMETHING: " << words[0] << std::endl;
+			
 		}
 		
-
-		/*
+		// checks for separator and operator
 		if (isSeparator(myTxt[i])) {
 			sepBuf.push_back(myTxt[i]);
 		}
 		if (isOperator(myTxt[i])) {
 			operBuf.push_back(myTxt[i]);
-		}*/
+		}
 
 	}
-	
-	std::cout << "TRIAL: " << stringBuff[2] << std::endl;
-	
-	
 
+	// remove whitespaces and newlines in words vector
+	for (size_t i = 0; i < words.size(); i++) {
+		std::cout << "Index #" << i << " " << words[i] << std::endl;
+	}
 
+	// Checks is the words in words buffer is a keyword or an identifier then push it to keyBuf or identBuf
+	/*for (size_t i = 0; i < words.size(); i++) {
+
+		if (words[i] == " " || words[i] == "\n")
+		{
+
+			words.erase(words.begin() + i);
+
+		} else if (isKeyword(words[i])) {
+
+			keyBuf.push_back(words[i]);
+
+		} else {
+
+			identBuf.push_back(words[i]);
+
+		}
+
+	}*/
+	/*
+	for (size_t i = 0; i < words.size(); i++)
+	{
+		std::cout << "PRINT SOMETHING: " << words[i] << std::endl;
+	}
+	
+	std::cout << "TRIAL: " << stringBuff << std::endl;*/
+	
+	
+	/*std::cout << "Testing Identifier...." << std::endl;
+	for (size_t i = 0; i < identBuf.size(); i++) {
+		std::cout << "Index #" << i << " " << identBuf[i] << std::endl;
+	}*/
 
 	///////////// labeling category & printing 
 	std::cout << std::setw(15) << std::left << "  Token" << std::setw(18) << std::right << "Lexeme" << std::endl;
-	printSeparators(sepBuf); //print all of the separators in its buffer
-	printOperators(operBuf);
+	//printSeparators(sepBuf); //print all of the separators in its buffer
+	//printOperators(operBuf);
 	//printKeywords(keyBuf);
+	//printIdentifiers(identBuf);
 	
 	// PRINTS EACH STRING/CHARACTER
 	/*for (size_t i = 0; i < myTxt.size(); i++)
@@ -136,7 +166,7 @@ bool isKeyword(std::string c)
 
 bool isSeparator(char c) {
 
-	if (c == '(' || c == ')' || c == '[' || c == ']' || c == '{' || c == '}' || c == ';' || c == ':' || c == '!' || c == ' ' || c == '\'') {
+	if (c == '(' || c == ')' || c == '[' || c == ']' || c == '{' || c == '}' || c == ';' || c == ':' || c == '!' || c == ' ' || c == '\'' || c == ',') {
 		return true;
 	}
 	return false;
@@ -158,10 +188,23 @@ bool isRealNum(std::string c)
 	return false;
 }
 
-void printKeywords(std::vector<char> &vec) {
+void printKeywords(std::vector<std::string> &vec) {
 
 	for (size_t i = 0; i < vec.size(); i++) {
+		if (vec[i] == " " || vec[i] == "\n") {
+			++i;
+		}
 		std::cout << std::setw(15) << std::left << "KEYWORD" << std::setw(15) << std::left << "  =" << std::setw(15) << std::left << vec[i] << std::endl;
+	}
+
+}
+void printIdentifiers(std::vector<std::string> &vec) {
+
+	for (size_t i = 0; i < vec.size(); i++) {
+		if (vec[i] == " " || vec[i] == "\n") {
+			++i;
+		}
+		std::cout << std::setw(15) << std::left << "IDENTIFIER" << std::setw(15) << std::left << "  =" << std::setw(15) << std::left << vec[i] << std::endl;
 	}
 
 }
@@ -169,6 +212,9 @@ void printKeywords(std::vector<char> &vec) {
 void printSeparators(std::vector<char> &vec)
 {
 	for (size_t i = 0; i < vec.size(); i++) {
+		if (vec[i] == ' ' || vec[i] == '\n') {
+			++i;
+		}
 		std::cout << std::setw(15) << std::left << "SEPARATOR" << std::setw(15) << std::left << "  =" << std::setw(15) << std::left << vec[i] << std::endl;
 	}
 	
@@ -177,6 +223,9 @@ void printSeparators(std::vector<char> &vec)
 void printOperators(std::vector<char> &vec)
 {
 	for (size_t i = 0; i < vec.size(); i++) {
+		if (vec[i] == ' ' || vec[i] == '\n') {
+			++i;
+		}
 		std::cout << std::setw(15) << std::left << "OPERATOR" << std::setw(15) << std::left << "  =" << std::setw(15) << std::left << vec[i] << std::endl;
 	}
 }
