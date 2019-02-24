@@ -113,6 +113,22 @@ int main() {
 			++it;
 		}
 	}
+
+	// remove whitespaces and newlines in separator vector
+	auto ite = sepBuf.begin();
+	while (ite != sepBuf.end())
+	{
+		// remove odd numbers
+		if (*ite == ' ') {
+			// erase() invalidates the iterator, use returned iterator
+			ite = sepBuf.erase(ite);
+		}
+		// Notice that iterator is incremented only on the else part (why?)
+		else {
+			++ite;
+		}
+	}
+
 	// Checks if the words in words buffer is a keyword or an identifier then push it to keyBuf or identBuf
 
 	for (size_t i = 0; i < words.size(); i++) {
