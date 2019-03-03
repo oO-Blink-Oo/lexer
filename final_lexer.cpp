@@ -15,15 +15,15 @@ struct tokenType {
 	string lexemeName; // this prints out the actual lexeme character
 };
 					              /*l   d  .  !  p  sp*/
-int stateFSM[][9] = { /*state 1*/   {2, 4, 6 ,7, 9, 1},
-					  /*state 2*/   {2, 2, 3, 3, 3, 3},
-					  /*Fstate 3*/  {1, 1, 1, 1, 1, 1},   /*Identifier*/
-					  /*state 4*/   {5, 4, 5, 5, 5, 5},
-					  /*Fstate 5*/  {1, 1, 1, 1, 1, 1},   /*End Number*/
-					  /*state 6*/   {9, 4, 9, 9, 9, 9},
-					  /*state 7*/   {7, 7, 7, 8, 7, 7},
-					  /*Fstate 8*/  {1, 1, 1, 1, 1, 1},   /*Comment*/
-					  /*Fstate 9*/  {1, 1, 1, 1, 1, 1} }; /*Punctuation*/
+int stateFSM[][9] = { /*state 0*/   {1, 3, 5 ,6, 8, 0},
+					  /*state 1*/   {1, 1, 2, 2, 2, 2},
+					  /*Fstate 2*/  {0, 0, 0, 0, 0, 0},   /*Identifier*/
+					  /*state 3*/   {4, 3, 4, 4, 4, 4},
+					  /*Fstate 4*/  {0, 0, 0, 0, 0, 0},   /*End Number*/
+					  /*state 5*/   {8, 3, 8, 8, 8, 8},
+					  /*state 6*/   {6, 6, 6, 7, 6, 6},
+					  /*Fstate 7*/  {0, 0, 0, 0, 0, 0},   /*Comment*/
+					  /*Fstate 8*/  {0, 0, 0, 0, 0, 0} }; /*Punctuation*/
 
 //FUNCTION PROTOTYPES
 vector<tokenType> lexer(string words);
@@ -74,8 +74,8 @@ vector<tokenType> lexer(string words) {
 
 		currentState = stateFSM[currentState][col];
 
-		if (currentState == 0) {
-			if (prevState != 1 /*space*/) {
+		if (currentState == 0) { //
+			if (prevState != 5 /*space*/) { // when you have successfully parsed a token
 				acc.token = currentToken;
 				acc.lexeme = prevState;
 				acc.lexemeName = getLexemeName(acc.lexeme);
