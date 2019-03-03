@@ -70,6 +70,7 @@ vector<tokenType> lexer(string words) {
 
 	//READS WORDS CHARACTER BY CHARACTER
 	for (size_t i = 0; i < words.length();) {
+		//cout << "Current state --> " << currentState << endl;
 		currentChar = words[i];
 
 		col = getFsmCol(currentChar);
@@ -77,13 +78,13 @@ vector<tokenType> lexer(string words) {
 
 		currentState = stateFSM[currentState][col];
 
-		if ((currentState == 6 && prevState == 0) || (currentState == 6 && prevState == 6)) {
+		/*if ((currentState == 6 && prevState == 0) || (currentState == 6 && prevState == 6)) {
 			prevState == 6;
 			i++;
 			if (prevState == 6 && currentState == 7) {
 				currentState == 0;
 			}
-		}
+		}*/
 
 		if (currentState == 0) { 
 			if (prevState != 5 /*space*/) { // when you have successfully parsed a token
@@ -100,10 +101,19 @@ vector<tokenType> lexer(string words) {
 				}
 			}*/
 			currentToken = "";
+		} else if ((currentState == 6 && prevState == 0) || (currentState == 6 && prevState == 6)) {
+
+				prevState == 6;
+				i++;
+
+				if (prevState == 6 && currentState == 7) {
+					currentState == 0;
+				}
 		} else {
 			currentToken += currentChar;
 			i++;
 		}
+		
 		prevState = currentState;
 	}
 
