@@ -42,13 +42,15 @@ int main() {
 	string stringExp = "";
 	vector<tokenType> tokens;
 	
-	while (getline(inFile,stringExp)) {
-		
+	while (!inFile.eof()) { //getline(inFile,stringExp) 
+		inFile >> stringExp;
 		tokens = lexer(stringExp);
 
 		//print out tokens vector
-		for (size_t i = 0; i < tokens.size(); i++) {
-			cout << tokens[i].token << " = " << tokens[i].lexeme << endl;
+		for (size_t i = 0; i < tokens.size(); ++i) {
+		
+			cout << tokens[i].token << " = " << tokens[i].lexemeName << endl;
+			
 		}
 	}
 
@@ -72,15 +74,31 @@ vector<tokenType> lexer(string words) {
 
 		col = getFsmCol(currentChar);
 
+
 		currentState = stateFSM[currentState][col];
 
-		if (currentState == 0) { //
+		if ((currentState == 6 && prevState == 0) || (currentState == 6 && prevState == 6)) {
+			prevState == 6;
+			i++;
+			if (prevState == 6 && currentState == 7) {
+				currentState == 0;
+			}
+		}
+
+		if (currentState == 0) { 
 			if (prevState != 5 /*space*/) { // when you have successfully parsed a token
 				acc.token = currentToken;
 				acc.lexeme = prevState;
 				acc.lexemeName = getLexemeName(acc.lexeme);
 				tokens.push_back(acc);
 			}
+			/*if ((currentState == 6 && prevState == 0) || (currentState == 6 && prevState == 6)) {
+				prevState == 6;
+				i++;
+				if (prevState == 6 && currentState == 7) {
+					currentState == 0;
+				}
+			}*/
 			currentToken = "";
 		} else {
 			currentToken += currentChar;
@@ -129,6 +147,9 @@ string getLexemeName(int lexeme) {
 		case 4: // Number
 			return "NUMBER";
 			break;
+		/*case 6:
+			return " ";
+			break;*/
 		case 7: // Comment
 			return "COMMENT";
 			break;
