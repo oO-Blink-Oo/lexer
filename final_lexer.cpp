@@ -44,7 +44,7 @@ int main() {
 	
 	while (getline(inFile,stringExp)) {
 		
-		//tokens = lexer(stringExp)
+		tokens = lexer(stringExp);
 
 		//print out tokens vector
 		for (size_t i = 0; i < tokens.size(); i++) {
@@ -89,7 +89,7 @@ vector<tokenType> lexer(string words) {
 		prevState = currentState;
 	}
 
-	if (currentState != 1 && currentToken != "") {
+	if (currentState != 5 && currentToken != "") {
 		acc.token = currentToken;
 		acc.lexeme = currentState;
 		acc.lexemeName = getLexemeName(acc.lexeme);
@@ -101,30 +101,43 @@ vector<tokenType> lexer(string words) {
 int getFsmCol(char currentChar) {
 	
 	if (isspace(currentChar)) {
-
+		return 5;
 	} else if (isalpha(currentChar)) {
-
+		return 0;
 	} else if (isdigit(currentChar)) {
-
+		return 1;
 	} else if (ispunct(currentChar)) {
-		//if . then state...
-		//if ! then state...
+
+		if (currentChar == '!') {
+			return 3;
+		}
+		if (currentChar == '.') {
+			return 2;
+		} else {
+
+			return 4;
+		}
 	} 
 }
 
 string getLexemeName(int lexeme) {
 	switch (lexeme) {
 
-		case 3: // identifier or keyword?
+		case 2: // identifier or keyword?
+			return "IDENTIFIER";
 			break;
-		case 5: // Number
+		case 4: // Number
+			return "NUMBER";
 			break;
-		case 8: // Comment
+		case 7: // Comment
+			return "COMMENT";
 			break;
-		case 9: // Punctuation
+		case 8: // Punctuation
+			return "PUNCTUATION";
 			break;
 	
 	default:
+		return "ERROR";
 		break;
 	}
 }
