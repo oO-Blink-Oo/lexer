@@ -43,7 +43,8 @@ int main() {
 	vector<tokenType> tokens;
 	
 	while (getline(inFile,stringExp)) {
-		//tokens = Lexer(stringExp)
+		
+		//tokens = lexer(stringExp)
 
 		//print out tokens vector
 		for (size_t i = 0; i < tokens.size(); i++) {
@@ -58,13 +59,14 @@ int main() {
 
 vector<tokenType> lexer(string words) {
 	tokenType acc;
-	vector<tokenType> tokens;
+	vector<tokenType> tokens; // will be returned
 	char currentChar = ' ';
-	int col = 0;
+	int col = 0;			  // column number
 	int currentState = 0;
 	int prevState = 0;
 	string currentToken = "";
 
+	//READS WORDS CHARACTER BY CHARACTER
 	for (size_t i = 0; i < words.length();) {
 		currentChar = words[i];
 
@@ -105,10 +107,9 @@ int getFsmCol(char currentChar) {
 	} else if (isdigit(currentChar)) {
 
 	} else if (ispunct(currentChar)) {
-
-	} else if (currentChar == '.') {
-
-	}
+		//if . then state...
+		//if ! then state...
+	} 
 }
 
 string getLexemeName(int lexeme) {
