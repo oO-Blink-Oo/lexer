@@ -87,7 +87,7 @@ vector<tokenType> lexer(string words) {
 		}*/
 
 		if (currentState == 2 || currentState == 4 || currentState == 7 || currentState == 8) {
-			if ((prevState != 5 || prevState != 4) && currentToken != "" /*space*/) { // when you have successfully parsed a token
+			if ((prevState != 5 || prevState != 4) && currentToken != "" /*space*/) {// when you have successfully parsed a token
 				acc.token = currentToken;
 				acc.lexeme = prevState;
 				acc.lexemeName = getLexemeName(acc.lexeme);
