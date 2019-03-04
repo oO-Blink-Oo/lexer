@@ -67,9 +67,10 @@ vector<tokenType> lexer(string words) {
 	int currentState = 0;
 	int prevState = 0;
 	string currentToken = "";
+	string keywords[] = { "int","float","bool","if","else","then","do","while","whileend","do","doend","for","and","or","function"};
 
 	//READS WORDS CHARACTER BY CHARACTER
-	for (size_t i = 0; i < words.length();) {
+	for (size_t i = 0; i < words.length();i++) {
 		//cout << "Current state --> " << currentState << endl;
 
 		currentChar = words[i];
@@ -85,7 +86,7 @@ vector<tokenType> lexer(string words) {
 			}
 		}*/
 
-		if (currentState == 0) { 
+		if (currentState == 2 || currentState == 4 || currentState == 7 || currentState == 8) {
 			if ((prevState != 5 || prevState != 4) && currentToken != "" /*space*/) { // when you have successfully parsed a token
 				acc.token = currentToken;
 				acc.lexeme = prevState;
@@ -112,7 +113,7 @@ vector<tokenType> lexer(string words) {
 			if (currentChar != ' ') {
 				currentToken += currentChar;
 			}
-			i++;//something might need to happen here
+			//i++;//something might need to happen here
 		}
 		prevState = currentState;
 	}
@@ -150,9 +151,11 @@ int getFsmCol(char currentChar) {
 
 string getLexemeName(int lexeme) {
 	switch (lexeme) {
-
-		case 2: // identifier or keyword?
+		case 1:
 			return "IDENTIFIER";
+			break;
+		case 2: // identifier or keyword?
+			return "KEYWORD";
 			break;
 		case 4: // Number
 			return "NUMBER";
