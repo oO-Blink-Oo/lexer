@@ -86,7 +86,7 @@ vector<tokenType> lexer(string words) {
 		}*/
 
 		if (currentState == 0) { 
-			if (prevState != 5 || prevState != 4 /*space*/) { // when you have successfully parsed a token
+			if ((prevState != 5 || prevState != 4) && currentToken != "" /*space*/) { // when you have successfully parsed a token
 				acc.token = currentToken;
 				acc.lexeme = prevState;
 				acc.lexemeName = getLexemeName(acc.lexeme);
@@ -99,7 +99,6 @@ vector<tokenType> lexer(string words) {
 					currentState == 0;
 				}
 			}*/
-			i++;
 			currentToken = "";
 		} else if ((currentState == 6 && prevState == 0) || (currentState == 6 && prevState == 6) || (prevState == 6 && currentState == 7)) {
 
