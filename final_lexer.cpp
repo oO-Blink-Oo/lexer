@@ -13,6 +13,7 @@ struct tokenType {
 	string token; // token name for the lexeme
 	int lexeme;
 	string lexemeName; // this prints out the actual lexeme character
+
 };
 					              /*l   d  .  !  p  sp*/
 int stateFSM[][9] = { /*state 0*/   {1, 3, 5 ,6, 8, 0},
@@ -42,14 +43,13 @@ int main() {
 	string stringExp = "";
 	vector<tokenType> tokens;
 	
-	while (!inFile.eof()) { //getline(inFile,stringExp) 
-		inFile >> stringExp;
+	while (getline(inFile, stringExp)) { //getline(inFile,stringExp) 
 		tokens = lexer(stringExp);
 
 		//print out tokens vector
 		for (size_t i = 0; i < tokens.size(); ++i) {
 		
-			cout << tokens[i].token << " = " << tokens[i].lexemeName << endl;
+			cout << tokens[i].token << "=" << tokens[i].lexemeName << endl;
 			
 		}
 	}
@@ -71,13 +71,12 @@ vector<tokenType> lexer(string words) {
 	//READS WORDS CHARACTER BY CHARACTER
 	for (size_t i = 0; i < words.length();) {
 		//cout << "Current state --> " << currentState << endl;
+
 		currentChar = words[i];
 
 		col = getFsmCol(currentChar);
 
-
 		currentState = stateFSM[currentState][col];
-
 		/*if ((currentState == 6 && prevState == 0) || (currentState == 6 && prevState == 6)) {
 			prevState == 6;
 			i++;
@@ -87,7 +86,7 @@ vector<tokenType> lexer(string words) {
 		}*/
 
 		if (currentState == 0) { 
-			if (prevState != 5 /*space*/) { // when you have successfully parsed a token
+			if (prevState != 5 || prevState != 4 /*space*/) { // when you have successfully parsed a token
 				acc.token = currentToken;
 				acc.lexeme = prevState;
 				acc.lexemeName = getLexemeName(acc.lexeme);
@@ -100,23 +99,25 @@ vector<tokenType> lexer(string words) {
 					currentState == 0;
 				}
 			}*/
+			i++;
 			currentToken = "";
-		} else if ((currentState == 6 && prevState == 0) || (currentState == 6 && prevState == 6)) {
+		} else if ((currentState == 6 && prevState == 0) || (currentState == 6 && prevState == 6) || (prevState == 6 && currentState == 7)) {
 
-				prevState == 6;
+				prevState = 6;
 				i++;
 
 				if (prevState == 6 && currentState == 7) {
-					currentState == 0;
+					currentState = 0;
 				}
 		} else {
-			currentToken += currentChar;
-			i++;
+			if (currentChar != ' ') {
+				currentToken += currentChar;
+			}
+			i++;//something might need to happen here
 		}
-		
 		prevState = currentState;
 	}
-
+	//if space or separator
 	if (currentState != 5 && currentToken != "") {
 		acc.token = currentToken;
 		acc.lexeme = currentState;

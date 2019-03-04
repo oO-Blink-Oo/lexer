@@ -5,8 +5,8 @@
 4. Scan vector to find comment block and ignore it
 5. Print it out
 
-read it string by string
-go through each string and read it character by character to check if the last character is a separator
+
+read it character by character to check if the last character is a separator
 if it is a '$' we shall consider this as an acceptable identifier
 
 Accepted final states:
@@ -143,25 +143,7 @@ int main() {
 		}
 	}
 	
-	//Print words vector
-	/*for (size_t i = 0; i < words.size(); i++)
-	{
-		std::cout << "INDEX #" << i << " " << words[i] << std::endl;
-	}*/
 
-	/*
-	for (size_t i = 0; i < words.size(); i++)
-	{
-		std::cout << "PRINT SOMETHING: " << words[i] << std::endl;
-	}
-	
-	std::cout << "TRIAL: " << stringBuff << std::endl;*/
-	
-	
-	/*std::cout << "Testing Identifier...." << std::endl;
-	for (size_t i = 0; i < identBuf.size(); i++) {
-		std::cout << "Index #" << i << " " << identBuf[i] << std::endl;
-	}*/
 
 	///////////// labeling category & printing 
 	std::cout << std::setw(15) << std::left << "  Token" << std::setw(18) << std::right << "Lexeme" << std::endl;
@@ -257,20 +239,3 @@ void printOperators(std::vector<char> &vec)
 		std::cout << std::setw(15) << std::left << "OPERATOR" << std::setw(15) << std::left << "  =" << std::setw(15) << std::left << vec[i] << std::endl;
 	}
 }
-
-
-//GOES THROUGH THE VECTOR THAT HAS CHARACTERS
-	//for (size_t i = 0; i < myTxt.size(); i++) {
-	//	/*
-	//	make a temp string to hold characters
-	//	push characters into temp string
-	//	check the temp string if keyword or identifier
-	//	push the string into keyword buffer or identifier buffer
-	//	*/
-	//	if (isSeparator(myTxt[i])){
-	//		sepBuf.push_back(myTxt[i]);
-	//	}
-	//	if (isOperator(myTxt[i])) {
-	//		operBuf.push_back(myTxt[i]);
-	//	}
-	//}
