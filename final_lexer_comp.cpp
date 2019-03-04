@@ -18,7 +18,7 @@ struct tokenType {
 
 int stateFSM[13][24] = {
  /*state 0*/  {1, 3, 2 ,5, 6, 0, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9},
-/*state 1*/   {1, 12, 12, 2, 2, 2, 9, 2, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10},
+/*state 1*/   {1, 12, 12, 2, 2, 2, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10},
 /*Fstate 2*/  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 /*state 3*/   {10, 3, 10, 4, 10, 4, 10, 4, 10, 10, 10, 10, 10, 10, 10, 4, 4, 4, 4, 4, 4, 4, 4, 4},
 /*Fstate 4*/  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -82,93 +82,210 @@ vector<tokenType> lexer(string words) {
 		col = getFsmCol(currentChar);
 
 		currentState = stateFSM[currentState][col];
-		
-		if (currentState == 2 || currentState == 4 || currentState == 7 || currentState == 8) {
-			if ((prevState != 5 || prevState != 4) && currentToken != "" /*space*/) { // when you have successfully parsed a token
-				acc.token = currentToken;
-				acc.lexeme = prevState;
-				acc.lexemeName = getLexemeName(acc.lexeme);
-				tokens.push_back(acc);
-			}
-			
+
+		switch (currentState) {
+		case 0: //TODO, this case is only hit when your initial char is a space when you're in the initial state
+			break;
+		case 1:
+			currentToken += currentChar;
+			break;
+		case 2: //keyword
+			acc.token = currentToken;
+			acc.lexeme = 0;
+			acc.lexemeName = getLexemeName(acc.lexeme);
+			tokens.push_back(acc);
 			currentToken = "";
-		}
-		else if ((currentState == 6 && prevState == 0) || (currentState == 6 && prevState == 6) || (prevState == 6 && currentState == 7)) {
-
-			prevState = 6;
-			i++;
-
-			if (prevState == 6 && currentState == 7) {
-				currentState = 0;
-			}
-		}
-		else {
-			if (currentChar != ' ') {
+			currentState = 0;
+			break;
+		case 3:
+			currentToken += currentChar;
+			break;
+		case 4:
+			acc.token = currentToken;
+			acc.lexeme = 1;
+			acc.lexemeName = getLexemeName(acc.lexeme);
+			tokens.push_back(acc);
+			currentToken = "";
+			currentState = 0;
+			break;
+		case 5:
+			currentToken += currentChar;
+			break;
+		case 6:
+			currentToken += currentChar;
+			break;
+		case 7:
+			acc.token = currentToken;
+			acc.lexeme = 2;
+			acc.lexemeName = getLexemeName(acc.lexeme);
+			tokens.push_back(acc);
+			currentToken = "";
+			currentState = 0;
+			break;
+		case 8:
+			//currentToken += currentChar;
+			acc.token = currentToken;
+			acc.lexeme = 4; //should be 4
+			acc.lexemeName = getLexemeName(acc.lexeme);
+			tokens.push_back(acc);
+			currentToken = "";
+			currentState = 0;
+			break;
+		case 9:
+			currentToken += currentChar;
+			acc.token = currentToken;
+			acc.lexeme = 3;
+			acc.lexemeName = getLexemeName(acc.lexeme);
+			tokens.push_back(acc);
+			currentToken = "";
+			currentState = 0;
+			break;
+		case 10:
+			acc.token = currentToken;
+			acc.lexeme = 5;
+			acc.lexemeName = getLexemeName(acc.lexeme);
+			tokens.push_back(acc);
+			currentToken = "";
+			currentState = 0;
+			break;
+		case 11:
+			currentToken += currentChar;
+			break;
+		case 12:
+			if (isdigit(currentChar) || currentChar == '$') {
 				currentToken += currentChar;
 			}
-			//i++;//something might need to happen here
+			acc.token = currentToken;
+			acc.lexeme = 6;
+			acc.lexemeName = getLexemeName(acc.lexeme);
+			tokens.push_back(acc);
+			currentToken = "";
+			currentState = 0;
+			break;
+		default:
+			break;
 		}
-		prevState = currentState;
-	}
-	//if space or separator
-	if (currentState != 5 && currentToken != "") {
-		acc.token = currentToken;
-		acc.lexeme = currentState;
-		acc.lexemeName = getLexemeName(acc.lexeme);
-		tokens.push_back(acc);
+		
+		/*if (currentState == 2 || currentState == 4 || currentState == 7 || currentState == 8 || currentState == 9 || currentState == 10 || currentState == 12) {
+			acc.token = currentToken;
+			acc.lexeme = prevState;
+			acc.lexemeName = getLexemeName(acc.lexeme);
+			tokens.push_back(acc);
+		}*/
+
+		
 	}
 	return tokens;
 }
 
 int getFsmCol(char currentChar) {
 
-	if (isspace(currentChar)) {
+	if (isalpha(currentChar)) {
+		return 0;
+	}else if (isdigit(currentChar)) {
+		return 1;
+	}else if (isspace(currentChar)) {
 		return 5;
 	}
-	else if (isalpha(currentChar)) {
-		return 0;
-	}
-	else if (isdigit(currentChar)) {
-		return 1;
-	}
-	else if (ispunct(currentChar)) {
 
-		if (currentChar == '!') {
-			return 3;
-		}
-		if (currentChar == '.') {
-			return 2;
-		}
-		else {
-
-			return 4;
-		}
+	switch (currentChar)
+	{
+	case '$':
+		return 2;
+		break;
+	case '.':
+		return 3;
+		break;
+	case '!':
+		return 4;
+		break;
+	case '\'':
+		return 6;
+		break;
+	case '(':
+		return 7;
+		break;
+	case ')':
+		return 8;
+		break;
+	case '{':
+		return 9;
+		break;
+	case '}':
+		return 10;
+		break;
+	case '[':
+		return 11;
+		break;
+	case ']':
+		return 12;
+		break;
+	case ',':
+		return 13;
+		break;
+	case ':':
+		return 14;
+		break;
+	case ';':
+		return 15;
+		break;
+	case '*':
+		return 16;
+		break;
+	case '/':
+		return 17;
+		break;
+	case '+':
+		return 18;
+		break;
+	case '-':
+		return 19;
+		break;
+	case '<':
+		return 20;
+		break;
+	case '>':
+		return 21;
+		break;
+	case '=':
+		return 22;
+		break;
+	case '%':
+		return 23;
+		break;
+	default:
+		cout << "default case" << endl;
+		break;
 	}
+
 }
 
 string getLexemeName(int lexeme) {
 	switch (lexeme) {
-	case 1:
-		return "IDENTIFIER";
-		break;
-	case 2: // identifier or keyword?
+	case 0:
 		return "KEYWORD";
 		break;
-	case 4: // Number
+	case 1: 
 		return "NUMBER";
 		break;
-		/*case 6:
-			return " ";
-			break;*/
-	case 7: // Comment
+	case 2:
 		return "COMMENT";
 		break;
-	case 8: // Punctuation
-		return "PUNCTUATION";
+	case 3: 
+		return "SEPARATOR";
+		break;
+	case 4: 
+		return "OPERATOR";
+		break;
+	case 5:
+		return "ERROR";
+		break;
+	case 6:
+		return "IDENTIFIER";
 		break;
 
 	default:
-		return "ERROR";
+		return "DEFAULT LEXEME NAME";
 		break;
 	}
 }
