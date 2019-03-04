@@ -65,32 +65,24 @@ int main() {
 }
 
 vector<tokenType> lexer(string words) {
-	tokenType acc;
+	tokenType acc; //the token struct we are working with
 	vector<tokenType> tokens; // will be returned
 	char currentChar = ' ';
 	int col = 0;			  // column number
-	int currentState = 0;
-	int prevState = 0;
+	int currentState = 0;	  //initial state
+	//int prevState = 0;
 	string currentToken = "";
 	string keywords[] = { "int","float","bool","if","else","then","do","while","whileend","do","doend","for","and","or","function" };
 
 	//READS WORDS CHARACTER BY CHARACTER
 	for (size_t i = 0; i < words.length(); i++) {
-		//cout << "Current state --> " << currentState << endl;
-
+		
 		currentChar = words[i];
 
 		col = getFsmCol(currentChar);
 
 		currentState = stateFSM[currentState][col];
-		/*if ((currentState == 6 && prevState == 0) || (currentState == 6 && prevState == 6)) {
-			prevState == 6;
-			i++;
-			if (prevState == 6 && currentState == 7) {
-				currentState == 0;
-			}
-		}*/
-
+		
 		if (currentState == 2 || currentState == 4 || currentState == 7 || currentState == 8) {
 			if ((prevState != 5 || prevState != 4) && currentToken != "" /*space*/) { // when you have successfully parsed a token
 				acc.token = currentToken;
@@ -98,13 +90,7 @@ vector<tokenType> lexer(string words) {
 				acc.lexemeName = getLexemeName(acc.lexeme);
 				tokens.push_back(acc);
 			}
-			/*if ((currentState == 6 && prevState == 0) || (currentState == 6 && prevState == 6)) {
-				prevState == 6;
-				i++;
-				if (prevState == 6 && currentState == 7) {
-					currentState == 0;
-				}
-			}*/
+			
 			currentToken = "";
 		}
 		else if ((currentState == 6 && prevState == 0) || (currentState == 6 && prevState == 6) || (prevState == 6 && currentState == 7)) {
