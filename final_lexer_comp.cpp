@@ -17,8 +17,8 @@ struct tokenType {
 };
 
 int stateFSM[13][24] = { //Fix table
- /*state 0*/  {1, 3, 2 ,5, 6, 0, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9},
-/*state 1*/   {1, 12, 12, 2, 2, 2, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10},
+ /*state 0*/  {1, 3, 2 ,5, 6, 0, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 8, 8, 8, 8, 8, 8, 8},
+/*state 1*/   {1, 12, 12, 2, 2, 2, 9, 2, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10},
 /*Fstate 2*/  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 /*state 3*/   {10, 3, 10, 4, 10, 4, 10, 4, 10, 10, 10, 10, 10, 10, 10, 4, 4, 4, 4, 4, 4, 4, 4, 4},
 /*Fstate 4*/  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -77,11 +77,13 @@ vector<tokenType> lexer(string words) {
 	//READS WORDS CHARACTER BY CHARACTER
 	for (size_t i = 0; i < words.length(); i++) {
 		
+
 		currentChar = words[i];
 
 		col = getFsmCol(currentChar);
 
 		currentState = stateFSM[currentState][col];
+
 
 		switch (currentState) {
 		case 0: //TODO, this case is only hit when your initial char is a space when you're in the initial state
@@ -94,8 +96,8 @@ vector<tokenType> lexer(string words) {
 			acc.lexeme = 0;
 			acc.lexemeName = getLexemeName(acc.lexeme);
 			tokens.push_back(acc);
-			currentToken = "";
-			currentState = 0;
+			//currentToken = "";
+			//currentState = 0;
 			break;
 		case 3:
 			currentToken += currentChar;
@@ -105,8 +107,8 @@ vector<tokenType> lexer(string words) {
 			acc.lexeme = 1;
 			acc.lexemeName = getLexemeName(acc.lexeme);
 			tokens.push_back(acc);
-			currentToken = "";
-			currentState = 0;
+			//currentToken = "";
+			//currentState = 0;
 			break;
 		case 5:
 			currentToken += currentChar;
@@ -119,8 +121,8 @@ vector<tokenType> lexer(string words) {
 			acc.lexeme = 2;
 			acc.lexemeName = getLexemeName(acc.lexeme);
 			tokens.push_back(acc);
-			currentToken = "";
-			currentState = 0;
+			//currentToken = "";
+			//currentState = 0;
 			break;
 		case 8:
 			//currentToken += currentChar;
@@ -128,8 +130,8 @@ vector<tokenType> lexer(string words) {
 			acc.lexeme = 4; //should be 4
 			acc.lexemeName = getLexemeName(acc.lexeme);
 			tokens.push_back(acc);
-			currentToken = "";
-			currentState = 0;
+			//currentToken = "";
+			//currentState = 0;
 			break;
 		case 9:
 			currentToken += currentChar;
@@ -137,16 +139,16 @@ vector<tokenType> lexer(string words) {
 			acc.lexeme = 3;
 			acc.lexemeName = getLexemeName(acc.lexeme);
 			tokens.push_back(acc);
-			currentToken = "";
-			currentState = 0;
+			//currentToken = "";
+			//currentState = 0;
 			break;
 		case 10:
 			acc.token = currentToken;
 			acc.lexeme = 5;
 			acc.lexemeName = getLexemeName(acc.lexeme);
 			tokens.push_back(acc);
-			currentToken = "";
-			currentState = 0;
+			//currentToken = "";
+			//currentState = 0;
 			break;
 		case 11:
 			currentToken += currentChar;
@@ -159,11 +161,28 @@ vector<tokenType> lexer(string words) {
 			acc.lexeme = 6;
 			acc.lexemeName = getLexemeName(acc.lexeme);
 			tokens.push_back(acc);
-			currentToken = "";
-			currentState = 0;
+			//currentToken = "";
+			//currentState = 0;
 			break;
 		default:
 			break;
+		}
+
+		if (currentChar == '(' && currentState == 2) {
+			currentToken = "";
+			currentToken += currentChar;
+		}
+
+		if (currentState == 2 && currentToken == "(") {
+			acc.token = currentToken;
+			acc.lexeme = 3;
+			acc.lexemeName = getLexemeName(acc.lexeme);
+			tokens.push_back(acc);
+		}
+
+		if (currentState == 2 || currentState == 4 || currentState == 7 || currentState == 8 || currentState == 9 || currentState == 10 || currentState == 12) {
+			currentToken = "";
+			currentState = 0;
 		}
 		
 		/*if (currentState == 2 || currentState == 4 || currentState == 7 || currentState == 8 || currentState == 9 || currentState == 10 || currentState == 12) {
@@ -175,6 +194,9 @@ vector<tokenType> lexer(string words) {
 
 		
 	}
+
+	//create a case if currentToken is populated so that it does not get deleted later
+
 	return tokens;
 }
 
