@@ -18,7 +18,7 @@ struct tokenType {
 
 int stateFSM[13][24] = { //Fix table
  /*state 0*/  {1, 3, 2 ,5, 6, 0, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 8, 8, 8, 8, 8, 8, 8},
-/*state 1*/   {1, 12, 12, 2, 2, 2, 9, 2, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10},
+/*state 1*/   {1, 11, 12, 2, 2, 2, 9, 2, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10},
 /*Fstate 2*/  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 /*state 3*/   {10, 3, 10, 4, 10, 4, 10, 4, 10, 10, 10, 10, 10, 10, 10, 4, 4, 4, 4, 4, 4, 4, 4, 4},
 /*Fstate 4*/  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -28,7 +28,7 @@ int stateFSM[13][24] = { //Fix table
 /*Fstate 8*/  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 /*Fstate 9*/  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 /*Fstate 10*/ {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-/*state 11*/  {11, 11, 10, 10, 10, 12, 10, 8, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10},
+/*state 11*/  {11, 11, 12, 10, 10, 12, 10, 8, 12, 10, 10, 10, 10, 12, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10},
 /*Fstate 12*/ {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0} };
 
 //FUNCTION PROTOTYPES
@@ -54,7 +54,7 @@ int main() {
 		//print out tokens vector
 		for (size_t i = 0; i < tokens.size(); ++i) {
 
-			cout << tokens[i].token << "=" << tokens[i].lexemeName << endl;
+			cout << tokens[i].lexemeName << " = " << tokens[i].token << endl;
 
 		}
 	}
@@ -64,6 +64,7 @@ int main() {
 	return 0;
 }
 
+//missing else and keyword large
 vector<tokenType> lexer(string words) {
 	tokenType acc; //the token struct we are working with
 	vector<tokenType> tokens; // will be returned
@@ -72,13 +73,15 @@ vector<tokenType> lexer(string words) {
 	int currentState = 0;	  //initial state
 	//int prevState = 0;
 	string currentToken = "";
-	string keywords[] = { "int","float","bool","if","else","then","do","while","whileend","do","doend","for","and","or","function" };
+	vector<string> keywords = { "int","float","bool","if","else","then","do","while","whileend","do","doend","for","and","or","function" };
+	bool isKey = false;
 
 	//READS WORDS CHARACTER BY CHARACTER
 	for (size_t i = 0; i < words.length(); i++) {
 		
 
 		currentChar = words[i];
+
 
 		col = getFsmCol(currentChar);
 
@@ -92,10 +95,21 @@ vector<tokenType> lexer(string words) {
 			currentToken += currentChar;
 			break;
 		case 2: //keyword
-			acc.token = currentToken;
-			acc.lexeme = 0;
-			acc.lexemeName = getLexemeName(acc.lexeme);
-			tokens.push_back(acc);
+			for (int i = 0; i < keywords.size(); i++) {
+				if (currentToken == keywords[i]) {
+					acc.token = currentToken;
+					acc.lexeme = 0;
+					acc.lexemeName = getLexemeName(acc.lexeme);
+					tokens.push_back(acc);
+					isKey = true;
+				}
+			}
+			if (isKey != true) {
+				acc.token = currentToken;
+				acc.lexeme = 6;
+				acc.lexemeName = getLexemeName(acc.lexeme);
+				tokens.push_back(acc);
+			}
 			//currentToken = "";
 			//currentState = 0;
 			break;
@@ -168,17 +182,29 @@ vector<tokenType> lexer(string words) {
 			break;
 		}
 
-		if (currentChar == '(' && currentState == 2) {
+		if ((currentChar == '(' && currentState == 2) || (currentChar == ',' && currentState == 12) || (currentChar == ')' && currentState == 12)) {
 			currentToken = "";
 			currentToken += currentChar;
 		}
 
-		if (currentState == 2 && currentToken == "(") {
+		/*if (currentChar = ',' && currentState == 12) {
+			currentToken = "";
+			currentToken += currentChar;
+		}*/
+
+		if ((currentState == 2 && currentToken == "(") || (currentState == 12 && currentToken == ",") || (currentState == 12 && currentToken == ")")) {
 			acc.token = currentToken;
 			acc.lexeme = 3;
 			acc.lexemeName = getLexemeName(acc.lexeme);
 			tokens.push_back(acc);
 		}
+
+		/*if (currentState == 12 && currentToken == ",") {
+			acc.token = currentToken;
+			acc.lexeme = 3;
+			acc.lexemeName = getLexemeName(acc.lexeme);
+			tokens.push_back(acc);
+		}*/
 
 		if (currentState == 2 || currentState == 4 || currentState == 7 || currentState == 8 || currentState == 9 || currentState == 10 || currentState == 12) {
 			currentToken = "";
@@ -214,6 +240,9 @@ int getFsmCol(char currentChar) {
 	{
 	case '\n':
 		return 0;
+		break;
+	case '\t':
+		return 5;
 		break;
 	case '$':
 		return 2;
