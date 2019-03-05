@@ -190,6 +190,9 @@ int getFsmCol(char currentChar) {
 
 	switch (currentChar)
 	{
+	case '\n':
+		return 0;
+		break;
 	case '$':
 		return 2;
 		break;
