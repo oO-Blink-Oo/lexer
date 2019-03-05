@@ -210,6 +210,8 @@ vector<tokenType> lexer(string words) {
 			currentToken = "";
 			currentState = 0;
 		}
+
+	
 		
 		/*if (currentState == 2 || currentState == 4 || currentState == 7 || currentState == 8 || currentState == 9 || currentState == 10 || currentState == 12) {
 			acc.token = currentToken;
@@ -220,7 +222,13 @@ vector<tokenType> lexer(string words) {
 
 		
 	}
-
+	//shortcoming
+	if (currentState == 1 && currentToken != "") {
+		acc.token = currentToken;
+		acc.lexeme = 0;
+		acc.lexemeName = getLexemeName(acc.lexeme);
+		tokens.push_back(acc);
+	}
 	//create a case if currentToken is populated so that it does not get deleted later
 
 	return tokens;
