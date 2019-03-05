@@ -125,7 +125,7 @@ vector<tokenType> lexer(string words) {
 			//currentState = 0;
 			break;
 		case 8:
-			//currentToken += currentChar;
+			currentToken += currentChar;
 			acc.token = currentToken;
 			acc.lexeme = 4; //should be 4
 			acc.lexemeName = getLexemeName(acc.lexeme);
